@@ -1,0 +1,59 @@
+---
+title: "Dashboard"
+author: "David Keyes"
+date: "5/8/2020"
+output: html_fragment
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE,
+                      out.width = "100%",
+                      dpi = 300)
+
+library(tidyverse)
+library(ggridges)
+```
+
+```{r}
+htmltools::includeHTML("header-dark.html")
+```
+
+<div class="animate__animated animate__fadeInUp px-16 py-8">
+  ```{r}
+Catalan_elections %>%
+  mutate(YearFct = fct_rev(as.factor(Year))) %>%
+  ggplot(aes(y = YearFct)) +
+  geom_density_ridges(
+    aes(x = Percent, fill = paste(YearFct, Option)), 
+    alpha = .8, color = "white", from = 0, to = 100
+  ) +
+  labs(
+    x = "Vote (%)",
+    y = "Election Year",
+    title = "Indy vs Unionist vote in Catalan elections",
+    subtitle = "Analysis unit: municipalities (n = 949)",
+    caption = "Marc Belzunces (@marcbeldata) | Source: Idescat"
+  ) +
+  scale_y_discrete(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_cyclical(
+    breaks = c("1980 Indy", "1980 Unionist"),
+    labels = c(`1980 Indy` = "Indy", `1980 Unionist` = "Unionist"),
+    values = c("#ff0000", "#0000ff", "#ff8080", "#8080ff"),
+    name = "Option", guide = "legend"
+  ) +
+  coord_cartesian(clip = "off") +
+  theme_ridges(grid = FALSE,
+               font_family = "Inter")
+```
+
+
+
+```{r}
+htmltools::includeHTML("footer.html")
+```
+
+
+
